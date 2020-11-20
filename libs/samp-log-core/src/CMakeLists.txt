@@ -1,8 +1,5 @@
 include(AMXConfig)
 
-option(LOGCORE_INSTALL_DEV 
-	"Generate install target specifically for development." ON)
-
 add_subdirectory(amx)
 
 if(WIN32)
@@ -13,9 +10,9 @@ else()
 	set(FILECHANGEDETECTOR_CPP FileChangeDetectorLinux.cpp)
 endif()
 
-set(LOGCORE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include/samplog)
+set(LOGCORE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include CACHE INTERNAL "LOGCORE_INCLUDE_DIR")
 
-add_library(log-core SHARED
+add_library(log-core STATIC
 	Api.cpp
 	AmxDebugManager.cpp
 	AmxDebugManager.hpp
@@ -36,9 +33,9 @@ add_library(log-core SHARED
 	crashhandler.hpp
 	${FILECHANGEDETECTOR_CPP}
 	FileChangeDetector.hpp
-	${LOGCORE_INCLUDE_DIR}/LogLevel.hpp
-	${LOGCORE_INCLUDE_DIR}/ILogger.hpp
-	${LOGCORE_INCLUDE_DIR}/export.h
+	${LOGCORE_INCLUDE_DIR}/samplog/LogLevel.hpp
+	${LOGCORE_INCLUDE_DIR}/samplog/ILogger.hpp
+	${LOGCORE_INCLUDE_DIR}/samplog/export.h
 )
 
 target_include_directories(log-core PRIVATE "../include")
@@ -66,12 +63,8 @@ target_compile_features(log-core PUBLIC
 )
 
 set_target_properties(log-core PROPERTIES PREFIX "")
-set_target_properties(log-core PROPERTIES OUTPUT_NAME "log-core2")
+set_target_properties(log-core PROPERTIES OUTPUT_NAME "log-core")
 
-target_include_directories(log-core PRIVATE 
-	${LOGCORE_LIBS_DIR}/tinydir
-	${YAML_CPP_INCLUDE_DIR}
-)
 
 target_compile_definitions(log-core PRIVATE IN_LOGCORE_PLUGIN)
 if(MSVC)
@@ -111,69 +104,6 @@ endif()
 target_link_libraries(log-core PRIVATE
 	amx
 	fmt
-	yaml-cpp
+	CONAN_PKG::yaml-cpp
+	CONAN_PKG::tinydir
 )
-
-if(LOGCORE_INSTALL_DEV)
-	set(INCLUDE_INSTALL_DIR include)
-	install(TARGETS log-core EXPORT log-core-targets
-		LIBRARY DESTINATION lib
-		ARCHIVE DESTINATION lib
-		RUNTIME DESTINATION bin
-		INCLUDES DESTINATION include
-	)
-	install(DIRECTORY "${PROJECT_SOURCE_DIR}/include/" DESTINATION include)
-	
-	include(CMakePackageConfigHelpers)
-	write_basic_package_version_file(
-		"${CMAKE_CURRENT_BINARY_DIR}/log-core/log-coreConfigVersion.cmake"
-		VERSION ${LOGCORE_VERSION}
-		COMPATIBILITY SameMajorVersion
-	)
-
-	export(EXPORT log-core-targets
-		FILE "${CMAKE_CURRENT_BINARY_DIR}/log-core/log-coreTargets.cmake"
-	)
-	
-	configure_package_config_file(
-		${PROJECT_SOURCE_DIR}/cmake/log-coreConfig.cmake.in
-		${CMAKE_CURRENT_BINARY_DIR}/log-coreConfig.cmake
-		INSTALL_DESTINATION cmake
-		PATH_VARS INCLUDE_INSTALL_DIR
-	)
-
-	set(ConfigPackageLocation cmake)
-	install(EXPORT log-core-targets
-	  FILE
-		log-coreTargets.cmake
-	  DESTINATION
-		${ConfigPackageLocation}
-	)
-	install(
-	  FILES
-		${CMAKE_CURRENT_BINARY_DIR}/log-coreConfig.cmake
-		"${CMAKE_CURRENT_BINARY_DIR}/log-core/log-coreConfigVersion.cmake"
-	  DESTINATION
-		${ConfigPackageLocation}
-	  COMPONENT
-		Devel
-	)
-else()
-	install(TARGETS log-core 
-		RUNTIME DESTINATION "./"
-		LIBRARY DESTINATION "./")
-endif()
-
-if(LOGCORE_INSTALL_DEV)
-	set(CPACK_PACKAGE_NAME ${CMAKE_PROJECT_NAME})
-else()
-	set(CPACK_PACKAGE_NAME "${CMAKE_PROJECT_NAME}-runtime")
-endif()
-set(CPACK_PACKAGE_VERSION ${LOGCORE_VERSION})
-if(WIN32)
-	set(CPACK_GENERATOR ZIP)
-else()
-	set(CPACK_GENERATOR TGZ)
-endif()
-
-include(CPack)

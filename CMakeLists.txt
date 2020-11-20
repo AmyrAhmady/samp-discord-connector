@@ -8,6 +8,35 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/libs/cmake")
 
+SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+SET(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_MINSIZEREL} /MT")
+SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+SET(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /MT")
+
+set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin )
+set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BINARY_DIR}/lib)
+set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BINARY_DIR}/lib)
+
+# -- CONAN
+include(CMakeFiles/conan.cmake)
+set(CMAKE_BUILD_TYPE "" CACHE STRING "" FORCE)
+function(add_conan_lib pkg_name conan_pkg)
+	conan_check(REQUIRED)
+
+	conan_cmake_run(
+		REQUIRES ${conan_pkg}
+		ARCH x86
+		BASIC_SETUP CMAKE_TARGETS
+		BUILD missing
+	)
+
+	set_target_properties(${pkg_name} PROPERTIES IMPORTED_GLOBAL TRUE)
+endfunction()
+
+conan_add_remote(NAME conan-transit
+                 INDEX 1
+                 URL https://api.bintray.com/conan/conan/conan-transit
+                 VERIFY_SSL True)
 if (MSVC)
 	add_link_options(/INCREMENTAL:NO /NODEFAULTLIB:MSVCRT)
 	# link runtime statically
@@ -38,20 +67,11 @@ if (NOT OPENSSL_FOUND)
 endif()
 
 
-find_package(Boost 1.69 QUIET)
-if(NOT Boost_FOUND)
-	set(BOOST_ROOT "${BOOST_ROOT}" CACHE PATH "Set the Boost root folder.")
-	mark_as_advanced(CLEAR BOOST_ROOT)
-	message(FATAL_ERROR "Could NOT find Boost; specify additional paths.")
-endif()
-mark_as_advanced(BOOST_ROOT Boost_DIR)
-
+add_conan_lib(CONAN_PKG::boost boost/1.73.0)
 
 add_subdirectory(libs/fmt)
 mark_as_advanced(FMT_TEST FMT_INSTALL FMT_PEDANTIC FMT_DOC FMT_USE_CPP11 FMT_WERROR)
 
-
-find_package(log-core REQUIRED CONFIG)
-
-
+add_conan_lib(CONAN_PKG::tinydir tinydir/1.2@paulobrizolara/stable)
+add_conan_lib(CONAN_PKG::yaml-cpp yaml-cpp/0.6.3)
 add_subdirectory(src)

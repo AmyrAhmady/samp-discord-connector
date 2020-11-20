@@ -19,6 +19,15 @@ configure_file(
 	@ONLY
 )
 
+if(WIN32)
+	set(CRASHHANDLER_CPP crashhandler_windows.cpp)
+	set(FILECHANGEDETECTOR_CPP FileChangeDetectorWindows.cpp)
+else()
+	set(CRASHHANDLER_CPP crashhandler_unix.cpp)
+	set(FILECHANGEDETECTOR_CPP FileChangeDetectorLinux.cpp)
+endif()
+
+add_subdirectory(logger/amx)
 
 add_samp_plugin(discord-connector 
 	${SAMPSDK_DIR}/amxplugin.cpp
@@ -61,6 +70,32 @@ add_samp_plugin(discord-connector
 	sdk.hpp
 	types.hpp
 	utils.hpp
+
+	# log
+	logger/Api.cpp
+	logger/AmxDebugManager.cpp
+	logger/AmxDebugManager.hpp
+	logger/SampConfigReader.cpp
+	logger/SampConfigReader.hpp
+	logger/Singleton.hpp
+	logger/LogConfig.cpp
+	logger/LogConfig.hpp
+	logger/Logger.cpp
+	logger/Logger.hpp
+	logger/LogManager.cpp
+	logger/LogManager.hpp
+	logger/LogRotationManager.cpp
+	logger/LogRotationManager.hpp
+	logger/utils.cpp
+	logger/utils.hpp
+	logger/${CRASHHANDLER_CPP}
+	logger/crashhandler.hpp
+	logger/${FILECHANGEDETECTOR_CPP}
+	logger/FileChangeDetector.hpp
+	logger/LogLevel.hpp
+	logger/ILogger.hpp
+	logger/export.h
+
 	plugin.def
 )
 
@@ -73,7 +108,6 @@ set_property(TARGET discord-connector PROPERTY CXX_STANDARD_REQUIRED ON)
 
 target_include_directories(discord-connector PRIVATE
 	${OPENSSL_INCLUDE_DIR}
-	${Boost_INCLUDE_DIR}
 	${SAMPSDK_INCLUDE_DIR}
 	${DCC_CONFIG_INCLUDE_DIR}
 	${LOGCORE_INCLUDE_DIR}
@@ -88,14 +122,15 @@ if(MSVC)
 		NOMINMAX
 		_WIN32_WINNT=0x0600
 		_SCL_SECURE_NO_WARNINGS
+		NOGDI
 	)
 	target_link_libraries(discord-connector Crypt32.lib)
 
 endif()
 
 target_compile_definitions(discord-connector PRIVATE ONLY_C_LOCALE) # make the date library use the C locale only
-
-target_link_libraries(discord-connector log-core fmt OpenSSL::SSL)
+target_link_libraries(discord-connector amx fmt OpenSSL::SSL CONAN_PKG::boost CONAN_PKG::yaml-cpp
+	CONAN_PKG::tinydir)
 
 if(UNIX)
 	if(NOT APPLE)
@@ -135,8 +170,6 @@ endif()
 
 
 install(TARGETS discord-connector DESTINATION "plugins/")
-get_target_property(LOGCORE_LOCATION log-core LOCATION)
-install(FILES "${LOGCORE_LOCATION}" DESTINATION "./")
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/discord-connector.inc" DESTINATION "pawno/include/")
 install(FILES "${PROJECT_SOURCE_DIR}/LICENSE" DESTINATION "./")
 if (WIN32 AND NOT OPENSSL_USE_STATIC_LIBS)

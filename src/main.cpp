@@ -81,7 +81,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	auto bot_token = GetEnvironmentVar("SAMP_DISCORD_BOT_TOKEN");
 
 	if (bot_token.empty())
-		SampConfigReader::Get()->GetVar("discord_bot_token", bot_token);
+		ServerConfigReader::Get()->GetVar("discord_bot_token", bot_token);
 
 	if (!bot_token.empty())
 	{

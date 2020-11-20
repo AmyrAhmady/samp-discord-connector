@@ -9,12 +9,12 @@ using std::string;
 using std::vector;
 
 
-class SampConfigReader : public Singleton<SampConfigReader>
+class ServerConfigReader : public Singleton<ServerConfigReader>
 {
-	friend class Singleton<SampConfigReader>;
+	friend class Singleton<ServerConfigReader>;
 private:
-	SampConfigReader();
-	~SampConfigReader() = default;
+	ServerConfigReader();
+	~ServerConfigReader() = default;
 
 public:
 	bool GetVar(string varname, string &dest);

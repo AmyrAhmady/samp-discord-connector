@@ -18,20 +18,26 @@
  *      misrepresented as being the original software.
  *  3.  This notice may not be removed or altered from any source distribution.
  *
- *  Version: $Id: amx.h 3363 2005-07-23 09:03:29Z thiadmer $
+ *  Version: $Id: amx.h,v 1.5 2006/03/26 16:56:15 spookie Exp $
+ *
+ *  Edited by Zeex on 2012-01-10
+ *  Changes:
+ *   - Added missing #include <stddef.h> (needed for size_t)
+ *   - Added missing #include <malloc.h> for _alloca on Windows
+ *   - Replaced <sclinux.h> with "sclinux.h"
  */
-
-#include <stddef.h>
 
 #if defined FREEBSD && !defined __FreeBSD__
   #define __FreeBSD__
 #endif
 #if defined LINUX || defined __FreeBSD__ || defined __OpenBSD__
-  #include <sclinux.h>
+  #include "sclinux.h"
 #endif
 
 #ifndef AMX_H_INCLUDED
 #define AMX_H_INCLUDED
+
+#include <stddef.h>
 
 #if defined HAVE_STDINT_H
   #include <stdint.h>
@@ -167,7 +173,6 @@ typedef cell (AMX_NATIVE_CALL *AMX_NATIVE)(struct tagAMX *amx, cell *params);
 typedef int (AMXAPI *AMX_CALLBACK)(struct tagAMX *amx, cell index,
                                    cell *result, cell *params);
 typedef int (AMXAPI *AMX_DEBUG)(struct tagAMX *amx);
-typedef void (AMXAPI *AMX_EXEC_ERROR)(struct tagAMX *amx, int index, cell *retval, int error);
 #if !defined _FAR
   #define _FAR
 #endif
@@ -216,7 +221,7 @@ typedef struct tagAMX_NATIVE_INFO {
 
 typedef struct tagAMX_FUNCSTUB {
   ucell address         PACKED;
-  char name[sEXPMAX+1]        ;
+  char name[sEXPMAX+1]  PACKED;
 } PACKED AMX_FUNCSTUB;
 
 typedef struct tagFUNCSTUBNT {
@@ -266,8 +271,8 @@ typedef struct tagAMX {
 typedef struct tagAMX_HEADER {
   int32_t size          PACKED; /* size of the "file" */
   uint16_t magic        PACKED; /* signature */
-  char    file_version        ; /* file format version */
-  char    amx_version         ; /* required version of the AMX */
+  char    file_version  PACKED; /* file format version */
+  char    amx_version   PACKED; /* required version of the AMX */
   int16_t flags         PACKED;
   int16_t defsize       PACKED; /* size of a definition record */
   int32_t cod           PACKED; /* initial value of COD - code block */
@@ -323,7 +328,7 @@ enum {
 };
 
 /*      AMX_FLAG_CHAR16   0x01     no longer used */
-#define AMX_FLAG_DEBUG    0x02  /* symbolic info. available */
+#define AMX_FLAG_DEBUG    0x02  /* symbolic stats. available */
 #define AMX_FLAG_COMPACT  0x04  /* compact encoding */
 #define AMX_FLAG_BYTEOPC  0x08  /* opcode is a byte (not a cell) */
 #define AMX_FLAG_NOCHECKS 0x10  /* no array bounds checking; no STMT opcode */
@@ -382,7 +387,6 @@ int AMXAPI amx_FindPubVar(AMX *amx, const char *varname, cell *amx_addr);
 int AMXAPI amx_FindTagId(AMX *amx, cell tag_id, char *tagname);
 int AMXAPI amx_Flags(AMX *amx,uint16_t *flags);
 int AMXAPI amx_GetAddr(AMX *amx,cell amx_addr,cell **phys_addr);
-int AMXAPI amx_GetExecErrorHandler(AMX *amx, AMX_EXEC_ERROR *handler);
 int AMXAPI amx_GetNative(AMX *amx, int index, char *funcname);
 int AMXAPI amx_GetPublic(AMX *amx, int index, char *funcname);
 int AMXAPI amx_GetPubVar(AMX *amx, int index, char *varname, cell *amx_addr);
@@ -402,12 +406,10 @@ int AMXAPI amx_Push(AMX *amx, cell value);
 int AMXAPI amx_PushArray(AMX *amx, cell *amx_addr, cell **phys_addr, const cell array[], int numcells);
 int AMXAPI amx_PushString(AMX *amx, cell *amx_addr, cell **phys_addr, const char *string, int pack, int use_wchar);
 int AMXAPI amx_RaiseError(AMX *amx, int error);
-int AMXAPI amx_RaiseExecError(AMX *amx, cell index, cell *retval, int error);
 int AMXAPI amx_Register(AMX *amx, const AMX_NATIVE_INFO *nativelist, int number);
 int AMXAPI amx_Release(AMX *amx, cell amx_addr);
 int AMXAPI amx_SetCallback(AMX *amx, AMX_CALLBACK callback);
 int AMXAPI amx_SetDebugHook(AMX *amx, AMX_DEBUG debug);
-int AMXAPI amx_SetExecErrorHandler(AMX *amx, AMX_EXEC_ERROR handler);
 int AMXAPI amx_SetString(cell *dest, const char *source, int pack, int use_wchar, size_t size);
 int AMXAPI amx_SetUserData(AMX *amx, long tag, void *ptr);
 int AMXAPI amx_StrLen(const cell *cstring, int *length);

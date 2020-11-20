@@ -46,7 +46,7 @@ public:
 	}
 };
 
-extern "C" DLL_PUBLIC samplog::internal::IApi *samplog_GetApi(int version)
+extern "C" samplog::internal::IApi *samplog_GetApi(int version)
 {
 	if (RefCounter == 0)
 	{
@@ -70,7 +70,7 @@ extern "C" DLL_PUBLIC samplog::internal::IApi *samplog_GetApi(int version)
 	return api;
 }
 
-extern "C" DLL_PUBLIC void samplog_DestroyApi(samplog::internal::IApi *api)
+extern "C" void samplog_DestroyApi(samplog::internal::IApi *api)
 {
 	if (api == nullptr)
 		return;

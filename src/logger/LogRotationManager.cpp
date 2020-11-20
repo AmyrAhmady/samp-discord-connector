@@ -3,6 +3,9 @@
 #include <functional>
 #include <fmt/format.h>
 #include <fmt/time.h>
+#ifdef WIN32_LEAN_AND_MEAN
+#undef WIN32_LEAN_AND_MEAN
+#endif // Workaround for warning as error.
 #include <tinydir.h>
 
 #include "LogRotationManager.hpp"

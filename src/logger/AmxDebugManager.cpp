@@ -3,6 +3,9 @@
 #include "LogConfig.hpp"
 
 #include <cassert>
+#ifdef WIN32_LEAN_AND_MEAN
+#undef WIN32_LEAN_AND_MEAN
+#endif // Workaround for warning as error.
 #include <tinydir.h>
 #include <algorithm>
 #include <vector>
