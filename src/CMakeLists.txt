@@ -155,7 +155,7 @@ elseif(UNIX)
 		-Wall
 		-Wextra
 		-pedantic
-		-Werror
+		-Wno-error
 	)
 endif()
 
