@@ -22,7 +22,6 @@ jobs:
     env:
       BUILD_TYPE: ${{ matrix.build-type }}
       CMAKE_BUILD_PARALLEL_LEVEL: 2
-      REPO_TAG: $(git describe --tags --always)
 
     steps:
 
