@@ -27,6 +27,8 @@ jobs:
 
     - name: Set env
       run: echo "REPO_TAG=$(git describe --tags --always)" >> $GITHUB_ENV
+      shell: bash
+    - run: echo "tag = ${{env.REPO_TAG}}"
     
     - name: get-cmake
       uses: lukka/get-cmake@v3.19.0
