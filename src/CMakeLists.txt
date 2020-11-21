@@ -110,7 +110,7 @@ set_target_properties(discord-connector
 	LIBRARY_OUTPUT_DIRECTORY  $<1:${CMAKE_BINARY_DIR}/artifact>
 )
 elseif(UNIX)
-message(binary dir: ${CMAKE_BINARY_DIR})
+message("binary dir:" ${CMAKE_BINARY_DIR})
 set_target_properties(discord-connector
     PROPERTIES
 	RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/artifact
