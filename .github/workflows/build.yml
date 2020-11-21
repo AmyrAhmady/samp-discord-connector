@@ -22,11 +22,17 @@ jobs:
     env:
       BUILD_TYPE: ${{ matrix.build-type }}
       CMAKE_BUILD_PARALLEL_LEVEL: 2
+      REPO_TAG: $(git describe --tags --always)
 
     steps:
+
     - uses: actions/checkout@v2
       with:
         submodules: recursive
+        fetch-depth: 0
+      run: echo "REPO_TAG=$(git describe --tags --always)" >> $GITHUB_ENV
+
+    - run: echo repo $REPO_TAG
 
     - name: get-cmake
       uses: lukka/get-cmake@v3.19.0
@@ -52,5 +58,5 @@ jobs:
         cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
         cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
         buildDirectory: '${{ runner.workspace }}/build'
-        cmakeAppendedArgs: '${{ matrix.cmake-args }}'
+        cmakeAppendedArgs: '${{ matrix.cmake-args }} -DCMAKE_BUILD_TYPE=${{ matrix.build-type }} -DDCC_VERSION=$REPO_TAG'
         buildWithCMakeArgs: '--target package'
