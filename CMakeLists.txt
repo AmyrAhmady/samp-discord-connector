@@ -16,7 +16,13 @@ if(MSVC)
 	set(CMAKE_BUILD_TYPE "" CACHE STRING "" FORCE)
 endif()
 
-SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/artifact")
+if(UNIX)
+set(
+      ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/artifact/"
+      LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/artifact/"
+      RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/artifact/"
+)
+endif()
 # -- CONAN
 include(CMakeFiles/conan.cmake)
 function(add_conan_lib pkg_name conan_pkg)
