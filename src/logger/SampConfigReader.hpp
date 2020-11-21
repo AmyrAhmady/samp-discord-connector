@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "Singleton.hpp"
+#include "../Singleton.hpp"
 
 
 class SampConfigReader : public Singleton<SampConfigReader>

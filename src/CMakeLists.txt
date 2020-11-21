@@ -53,8 +53,6 @@ add_samp_plugin(discord-connector
 	PawnDispatcher.hpp
 	Role.cpp
 	Role.hpp
-	SampConfigReader.cpp
-	SampConfigReader.hpp
 	User.cpp
 	User.hpp
 	WebSocket.cpp
@@ -77,7 +75,6 @@ add_samp_plugin(discord-connector
 	logger/AmxDebugManager.hpp
 	logger/SampConfigReader.cpp
 	logger/SampConfigReader.hpp
-	logger/Singleton.hpp
 	logger/LogConfig.cpp
 	logger/LogConfig.hpp
 	logger/Logger.cpp

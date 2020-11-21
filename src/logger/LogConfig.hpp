@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Singleton.hpp"
+#include "../Singleton.hpp"
 #include "samplog/LogLevel.hpp"
 #include "FileChangeDetector.hpp"
 #include "Logger.hpp"

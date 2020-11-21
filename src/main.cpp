@@ -6,7 +6,7 @@
 #include "User.hpp"
 #include "Channel.hpp"
 #include "Message.hpp"
-#include "SampConfigReader.hpp"
+#include "logger/SampConfigReader.hpp"
 #include "Logger.hpp"
 #include "version.hpp"
 
@@ -81,7 +81,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	auto bot_token = GetEnvironmentVar("SAMP_DISCORD_BOT_TOKEN");
 
 	if (bot_token.empty())
-		ServerConfigReader::Get()->GetVar("discord_bot_token", bot_token);
+		SampConfigReader::Get()->GetVar("discord_bot_token", bot_token);
 
 	if (!bot_token.empty())
 	{

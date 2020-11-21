@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "Singleton.hpp"
+#include "../Singleton.hpp"
 #include "amx/amx.h"	
 #include "amx/amxdbg.h"
 #include <samplog/ILogger.hpp>

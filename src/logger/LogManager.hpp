@@ -9,7 +9,7 @@
 #include <fstream>
 #include <functional>
 
-#include "Singleton.hpp"
+#include "../Singleton.hpp"
 #include "Logger.hpp"
 
 #include <samplog/LogLevel.hpp>
