@@ -7,20 +7,14 @@
             "platform": "linux",
             "archive": true,
             "includes": ["discord-connector-.+\\/pawno\\/include"],
-            "plugins": ["discord-connector-.+\\/plugins\\/discord-connector\\.so"],
-            "files": {
-                "discord-connector-.+\\/log-core2.so": "log-core2.so"
-            }
+            "plugins": ["discord-connector-.+\\/plugins\\/discord-connector\\.so"]
         },
         {
             "name": "^discord-connector-.+-win(32)?.zip$",
             "platform": "windows",
             "archive": true,
             "includes": ["discord-connector-.+\\/pawno\\/include"],
-            "plugins": ["discord-connector-.+\\/plugins\\/discord-connector\\.dll"],
-            "files": {
-                "discord-connector-.+\\/log-core2.dll": "log-core2.dll"
-            }
+            "plugins": ["discord-connector-.+\\/plugins\\/discord-connector\\.dll"]
         }
     ],
     "runtime": {
@@ -31,6 +25,7 @@
         "AGraber",
         "ghost",
         "seanny",
-        "Southclaws"
+        "Southclaws",
+        "Alasnkz"
     ]
 }
