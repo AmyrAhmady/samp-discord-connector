@@ -187,3 +187,11 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E copy
 		${PROJECT_SOURCE_DIR}/LICENSE
 		${CMAKE_BINARY_DIR}/artifact/LICENSE)
+
+if(DGH_ACBUILD AND UNIX)
+add_custom_command(
+    TARGET discord-connector POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+		${CMAKE_BINARY_DIR}/lib/discord-connector.so
+		${CMAKE_BINARY_DIR}/artifact/discord-connector.so)
+endif()

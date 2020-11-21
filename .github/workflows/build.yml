@@ -21,14 +21,13 @@ jobs:
       CMAKE_BUILD_PARALLEL_LEVEL: 2
 
     steps:
-
     - uses: actions/checkout@v2
       with:
         submodules: recursive
 
     - name: Set env
       run: echo "REPO_TAG=$(echo $GITHUB_SHA | cut -c 1-6)" >> $GITHUB_ENV
-
+      
     - name: get-cmake
       uses: lukka/get-cmake@v3.19.0
 
@@ -53,7 +52,7 @@ jobs:
         cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
         cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
         buildDirectory: '${{ runner.workspace }}/build'
-        cmakeAppendedArgs: '${{ matrix.cmake-args }} -DCMAKE_BUILD_TYPE=${{ matrix.build-type }} -DDCC_VERSION=$REPO_TAG'
+        cmakeAppendedArgs: '${{ matrix.cmake-args }} -DCMAKE_BUILD_TYPE=${{ matrix.build-type }} -DDCC_VERSION=$REPO_TAG -DGH_ACBUILD=TRUE'
 
     - name: Upload artifact
       uses: actions/upload-artifact@v2
