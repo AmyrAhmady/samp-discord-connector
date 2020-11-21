@@ -2,9 +2,6 @@ name: Build
 
 on: [push, pull_request]
 
-env:
-  VCPKGRESPONSEFILE: '${{ github.workspace }}/vcpkg-response-file.txt'
-
 jobs:
   build:
     strategy:

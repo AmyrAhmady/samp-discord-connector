@@ -103,11 +103,20 @@ endif()
 set_property(TARGET discord-connector PROPERTY CXX_STANDARD 14)
 set_property(TARGET discord-connector PROPERTY CXX_STANDARD_REQUIRED ON)
 
+if(MSVC)
 set_target_properties(discord-connector
     PROPERTIES
-	RUNTIME_OUTPUT_DIRECTORY $<1:../artifact>
-	LIBRARY_OUTPUT_DIRECTORY  $<1:../artifact>
+	RUNTIME_OUTPUT_DIRECTORY $<1:${CMAKE_BINARY_DIR}/artifact>
+	LIBRARY_OUTPUT_DIRECTORY  $<1:${CMAKE_BINARY_DIR}/artifact>
 )
+else(UNIX)
+set_target_properties(discord-connector
+    PROPERTIES
+	RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/artifact>
+	LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/artifact>
+)
+endif()
+
 
 target_include_directories(discord-connector PRIVATE
 	${OPENSSL_INCLUDE_DIR}
