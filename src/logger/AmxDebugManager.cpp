@@ -81,8 +81,11 @@ bool AmxDebugManager::InitDebugData(const char *filepath)
 	  litte-endian machines, since the SA-MP server only runs on x86(-64) architecture.
 	*/
 	AMX_HEADER hdr;
-	fread(&hdr, sizeof hdr, 1, amx_file);
-
+	size_t value = fread(&hdr, sizeof hdr, 1, amx_file);
+	if (!value)
+	{
+		return false;
+	}
 	/*if (hdr.magic != AMX_MAGIC) {
 		fclose(fp);
 		return AMX_ERR_FORMAT;
