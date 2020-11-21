@@ -32,8 +32,8 @@ jobs:
       uses: lukka/get-cmake@v3.19.0
 
     - if: runner.os == 'Linux'
-      name: Install gcc-multilib for linux
-      run: sudo apt install gcc-multilib
+      name: Install gcc/g++-multilib for linux
+      run: sudo apt install gcc-multilib g++-multilib
 
     - name: Get python
       uses: actions/setup-python@v2
@@ -53,4 +53,4 @@ jobs:
         cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
         buildDirectory: '${{ runner.workspace }}/build'
         cmakeAppendedArgs: '${{ matrix.cmake-args }}'
-    - run: cmake --build . --config ${{ matrix.build_type }}
+        buildWithCMakeArgs: '--target package'
