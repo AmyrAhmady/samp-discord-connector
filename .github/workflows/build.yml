@@ -57,5 +57,5 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
-        name: discord-connector-${{ env.REPO_TAG }}-${{ runner.os }}-${{ matrix.build_type }}
+        name: discord-connector-${{ env.REPO_TAG }}-${{ runner.os }}-${{ matrix.build-type }}
         path: ${{ runner.workspace }}/build/artifact/
