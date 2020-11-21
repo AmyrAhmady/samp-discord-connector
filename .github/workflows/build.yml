@@ -57,4 +57,9 @@ jobs:
         cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
         buildDirectory: '${{ runner.workspace }}/build'
         cmakeAppendedArgs: '${{ matrix.cmake-args }} -DCMAKE_BUILD_TYPE=${{ matrix.build-type }} -DDCC_VERSION=$REPO_TAG'
-        buildWithCMakeArgs: '--target package'
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: discord-connector-$REPO_TAG-${{ runner.os }}
+        path: ${{ runner.workspace }}/build/artifact/

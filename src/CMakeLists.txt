@@ -9,7 +9,7 @@ set(DCC_CONFIG_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/config_headers")
 
 configure_file(
 	"../discord-connector.inc.in"
-	"discord-connector.inc"
+	"../artifact/pawno/include/discord-connector.inc"
 	@ONLY
 )
 
@@ -103,6 +103,12 @@ endif()
 set_property(TARGET discord-connector PROPERTY CXX_STANDARD 14)
 set_property(TARGET discord-connector PROPERTY CXX_STANDARD_REQUIRED ON)
 
+set_target_properties(discord-connector
+    PROPERTIES
+	RUNTIME_OUTPUT_DIRECTORY $<1:../artifact>
+	LIBRARY_OUTPUT_DIRECTORY  $<1:../artifact>
+)
+
 target_include_directories(discord-connector PRIVATE
 	${OPENSSL_INCLUDE_DIR}
 	${SAMPSDK_INCLUDE_DIR}
@@ -165,23 +171,14 @@ if (MSVC)
 	target_compile_options(discord-connector PUBLIC "$<$<CONFIG:Release>:/Od>")
 endif()
 
+add_custom_command(
+        TARGET discord-connector POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+			${CMAKE_CURRENT_BINARY_DIR}/discord-connector.inc
+			../artifact/pawno/include/discord-connector.inc)
 
-install(TARGETS discord-connector DESTINATION "plugins/")
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/discord-connector.inc" DESTINATION "pawno/include/")
-install(FILES "${PROJECT_SOURCE_DIR}/LICENSE" DESTINATION "./")
-if (WIN32 AND NOT OPENSSL_USE_STATIC_LIBS)
-	file (GLOB _openssl_dlls  "${OPENSSL_ROOT_DIR}/bin/lib*.dll")
-	foreach (_dll_file ${_openssl_dlls})
-		install (FILES "${_dll_file}" DESTINATION "./")
-	endforeach()
-endif()
-
-
-set(CPACK_PACKAGE_VERSION ${DCC_VERSION})
-if(WIN32)
-	set(CPACK_GENERATOR ZIP)
-else()
-	set(CPACK_GENERATOR TGZ)
-endif()
-
-include(CPack)
+add_custom_command(
+    TARGET discord-connector POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+		${PROJECT_SOURCE_DIR}/LICENSE
+		../artifact/LICENSE)
