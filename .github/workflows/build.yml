@@ -30,7 +30,7 @@ jobs:
       with:
         submodules: recursive
         fetch-depth: 0
-      run: echo "REPO_TAG=$(git describe --tags --always)" >> $GITHUB_ENV
+    - run: echo "REPO_TAG=$(git describe --tags --always)" >> $GITHUB_ENV
 
     - run: echo repo $REPO_TAG
 
