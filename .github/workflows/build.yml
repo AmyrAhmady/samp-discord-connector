@@ -62,4 +62,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: discord-connector-$REPO_TAG-${{ runner.os }}
-        path: ${{ runner.workspace }}/artifact/
+        path: ${{ runner.workspace }}/build/artifact/

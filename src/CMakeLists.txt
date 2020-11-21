@@ -9,7 +9,7 @@ set(DCC_CONFIG_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/config_headers")
 
 configure_file(
 	"../discord-connector.inc.in"
-	"../artifact/pawno/include/discord-connector.inc"
+	"${CMAKE_BINARY_DIR}/artifact/pawno/include/discord-connector.inc"
 	@ONLY
 )
 
