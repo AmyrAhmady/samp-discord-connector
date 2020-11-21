@@ -26,8 +26,8 @@ jobs:
         submodules: recursive
 
     - name: Set env
-      run: echo "REPO_TAG=$(echo $GITHUB_SHA | cut -c 1-6)" >> $GITHUB_ENV
-      
+      run: echo "REPO_TAG=$(git describe --tags --always)" >> $GITHUB_ENV
+    
     - name: get-cmake
       uses: lukka/get-cmake@v3.19.0
 
@@ -52,10 +52,10 @@ jobs:
         cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
         cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
         buildDirectory: '${{ runner.workspace }}/build'
-        cmakeAppendedArgs: '${{ matrix.cmake-args }} -DCMAKE_BUILD_TYPE=${{ matrix.build-type }} -DDCC_VERSION=$REPO_TAG -DGH_ACBUILD=TRUE'
+        cmakeAppendedArgs: '${{ matrix.cmake-args }} -DCMAKE_BUILD_TYPE=${{ matrix.build-type }} -DDCC_VERSION=${{ env.REPO_TAG }} -DGH_ACBUILD=TRUE'
 
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
-        name: discord-connector-$REPO_TAG-${{ runner.os }}
+        name: discord-connector-${{ env.REPO_TAG }}-${{ runner.os }}-${{ matrix.build_type }}
         path: ${{ runner.workspace }}/build/artifact/
