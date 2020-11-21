@@ -172,12 +172,6 @@ if (MSVC)
 endif()
 
 add_custom_command(
-        TARGET discord-connector POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy
-			${CMAKE_CURRENT_BINARY_DIR}/discord-connector.inc
-			${CMAKE_BINARY_DIR}/artifact/pawno/include/discord-connector.inc)
-
-add_custom_command(
     TARGET discord-connector POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
 		${PROJECT_SOURCE_DIR}/LICENSE
