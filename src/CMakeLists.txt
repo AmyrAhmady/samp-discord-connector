@@ -126,7 +126,7 @@ if(MSVC)
 endif()
 
 target_compile_definitions(discord-connector PRIVATE ONLY_C_LOCALE) # make the date library use the C locale only
-target_link_libraries(discord-connector amx fmt OpenSSL::SSL CONAN_PKG::boost CONAN_PKG::yaml-cpp
+target_link_libraries(discord-connector amx fmt CONAN_PKG::boost CONAN_PKG::openssl CONAN_PKG::yaml-cpp
 	CONAN_PKG::tinydir)
 
 if(UNIX)

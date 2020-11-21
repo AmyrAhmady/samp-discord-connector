@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../Singleton.hpp"
-#include "samplog/LogLevel.hpp"
+#include "LogLevel.hpp"
 #include "FileChangeDetector.hpp"
 #include "Logger.hpp"
 

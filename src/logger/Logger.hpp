@@ -4,8 +4,8 @@
 #include <chrono>
 #include <atomic>
 
-#include <samplog/export.h>
-#include <samplog/ILogger.hpp>
+#include "export.h"
+#include "ILogger.hpp"
 #include "LogRotationManager.hpp"
 
 using samplog::LogLevel;

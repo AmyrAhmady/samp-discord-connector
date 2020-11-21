@@ -59,15 +59,18 @@ if(NOT DEFINED OPENSSL_USE_STATIC_LIBS)
 	set(OPENSSL_USE_STATIC_LIBS ON)
 	set(OPENSSL_MSVC_STATIC_RT ON)
 endif()
-find_package(OpenSSL)
-if (NOT OPENSSL_FOUND)
-	set(OPENSSL_ROOT_DIR "${OPENSSL_ROOT_DIR}" CACHE PATH "Set the OpenSSL root folder.")
-	mark_as_advanced(CLEAR OPENSSL_ROOT_DIR)
-	message(FATAL_ERROR "Could NOT find OpenSSL; specify additional paths.")
-endif()
 
+add_conan_lib(CONAN_PKG::openssl openssl/1.1.1h)
 
-add_conan_lib(CONAN_PKG::boost boost/1.73.0)
+conan_check(REQUIRED)
+conan_cmake_run(
+	REQUIRES boost/1.73.0
+	ARCH x86
+	BASIC_SETUP CMAKE_TARGETS
+	BUILD missing
+	OPTIONS boost:zlib=False
+)
+set_target_properties(CONAN_PKG::boost PROPERTIES IMPORTED_GLOBAL TRUE)
 
 add_subdirectory(libs/fmt)
 mark_as_advanced(FMT_TEST FMT_INSTALL FMT_PEDANTIC FMT_DOC FMT_USE_CPP11 FMT_WERROR)

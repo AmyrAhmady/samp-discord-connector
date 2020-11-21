@@ -12,7 +12,7 @@
 #include "../Singleton.hpp"
 #include "Logger.hpp"
 
-#include <samplog/LogLevel.hpp>
+#include "LogLevel.hpp"
 
 
 class LogManager : public Singleton<LogManager>

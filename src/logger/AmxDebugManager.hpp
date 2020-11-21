@@ -7,7 +7,7 @@
 #include "../Singleton.hpp"
 #include "amx/amx.h"	
 #include "amx/amxdbg.h"
-#include <samplog/ILogger.hpp>
+#include "ILogger.hpp"
 
 
 class AmxDebugManager : public Singleton<AmxDebugManager>

@@ -3,7 +3,7 @@
 #include <string>
 #include <fmt/color.h>
 
-#include "samplog/LogLevel.hpp"
+#include "LogLevel.hpp"
 
 
 namespace utils

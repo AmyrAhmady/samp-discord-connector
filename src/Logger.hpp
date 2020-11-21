@@ -1,6 +1,6 @@
 #pragma once
 
-#include <samplog/samplog.hpp>
+#include "logger/samplog.hpp"
 #include "Singleton.hpp"
 #include "Error.hpp"
 

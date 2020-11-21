@@ -10,7 +10,7 @@
 #include "Logger.hpp"
 #include "version.hpp"
 
-#include <samplog/samplog.hpp>
+#include "logger/samplog.hpp"
 #include <thread>
 #include <cstdlib>
 
