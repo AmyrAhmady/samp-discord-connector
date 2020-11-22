@@ -26,7 +26,7 @@ jobs:
           prerelease: false
 
 
-  build:
+  build-release:
     needs: create-release
     strategy:
       fail-fast: false
@@ -41,7 +41,7 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     env:
-      BUILD_TYPE: ${{ matrix.build-type }}
+      BUILD_TYPE: Release
       CMAKE_BUILD_PARALLEL_LEVEL: 2
 
     steps:
@@ -53,8 +53,6 @@ jobs:
       run: echo "REPO_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
       shell: bash
 
-    - run: echo "tag = ${{env.REPO_TAG}}"
-    
     - name: get-cmake
       uses: lukka/get-cmake@v3.19.0
 
@@ -62,13 +60,8 @@ jobs:
       name: Install gcc/g++-multilib for linux
       run: sudo apt install gcc-multilib g++-multilib
 
-    - if: matrix.build-type == 'Release'
-      name: Setup release name
-      run: echo "ARTIFACT_NAME=discord-connector-${{ env.REPO_TAG }}-${{ runner.os }}"
-
-    - if: matrix.build-type == 'Debug'
-      name: Setup debug name
-      run: echo "ARTIFACT_NAME=discord-connector-${{ env.REPO_TAG }}-${{ runner.os }}-${{ matrix.build-type }}"
+    - name: Set artifact name
+      run: echo "ARTIFACT_NAME=discord-connector-${{ env.REPO_TAG }}-${{ runner.os }}" >> $GITHUB_ENV
 
     - name: Get python
       uses: actions/setup-python@v2
@@ -87,7 +80,80 @@ jobs:
         cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
         cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
         buildDirectory: '${{ runner.workspace }}/build'
-        cmakeAppendedArgs: '${{ matrix.cmake-args }} -DCMAKE_BUILD_TYPE=${{ matrix.build-type }} -DDCC_VERSION=${{ env.REPO_TAG }} -DGH_ACBUILD=TRUE'
+        cmakeAppendedArgs: '${{ matrix.cmake-args }} -DCMAKE_BUILD_TYPE=Release -DDCC_VERSION=${{ env.REPO_TAG }} -DGH_ACBUILD=TRUE'
+
+    - name: Upload release artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ env.ARTIFACT_NAME }}
+        path: ${{ runner.workspace }}/build/artifact/
+
+    - name: Upload Asset
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create-release.outputs.upload_url }} 
+        asset_path: ./${{ env.ARTIFACT_NAME }}.zip
+        asset_name: ${{ env.ARTIFACT_NAME }}.zip
+        asset_content_type: application/zip
+
+  build-debug:
+    needs: [create-release, build-release]
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-18.04]
+        build-type: [Debug]
+        include:
+          - os: windows-latest
+            cmake-args: '-AWin32 -Thost=x86'
+          - os: ubuntu-18.04
+            cmake-args: '-DCMAKE_CXX_FLAGS=-m32 -DCMAKE_C_FLAGS=-m32'
+
+    runs-on: ${{ matrix.os }}
+    env:
+      BUILD_TYPE: Debug
+      CMAKE_BUILD_PARALLEL_LEVEL: 2
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Set release env
+      run: echo "REPO_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      shell: bash
+
+    - name: get-cmake
+      uses: lukka/get-cmake@v3.19.0
+
+    - if: runner.os == 'Linux'
+      name: Install gcc/g++-multilib for linux
+      run: sudo apt install gcc-multilib g++-multilib
+
+    - name: Set artifact name
+      run: echo "ARTIFACT_NAME=discord-connector-${{ env.REPO_TAG }}-${{ runner.os }}-Debug" >> $GITHUB_ENV
+    
+    - name: Get python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9.0 # SemVer's version range syntax
+
+    - name: Install conan
+      run: |
+        python -m pip install --upgrade pip
+        pip install conan
+        conan remote add conan-transit-legacy https://api.bintray.com/conan/conan/conan-transit
+
+    - name: Configure cmake & build
+      uses: lukka/run-cmake@v2
+      with:
+        cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
+        cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
+        buildDirectory: '${{ runner.workspace }}/build'
+        cmakeAppendedArgs: '${{ matrix.cmake-args }} -DCMAKE_BUILD_TYPE=Debug -DDCC_VERSION=${{ env.REPO_TAG }} -DGH_ACBUILD=TRUE'
 
     - name: Upload release artifact
       uses: actions/upload-artifact@v2
