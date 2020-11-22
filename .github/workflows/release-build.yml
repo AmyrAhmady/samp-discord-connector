@@ -95,7 +95,7 @@ jobs:
         path: ${{ runner.workspace }}/build/artifact/
 
     - name: Zip artifact
-      run: Compress-Archive ${{ env.ARTIFACT_NAME }}/build/artifact/* ${{ env.ARTIFACT_NAME }}/build/artifact/artifact.zip
+      run: Compress-Archive ${{ runner.workspace }}/build/artifact/* ${{ runner.workspace }}/build/artifact/${{ env.ARTIFACT_NAME }}.zip
       shell: pwsh
 
     - name: Upload Asset
