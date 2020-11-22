@@ -6,7 +6,27 @@ on:
       - 'v*.*.*' 
 
 jobs:
+  create-release:
+    - name: Set release env
+      run: echo "RELEASE_REPO_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      shell: bash
+
+    - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ env.RELEASE_REPO_TAG }}
+          body: |
+            This is a automated creation of a release. Wait for changelogs.
+          draft: true
+          prerelease: false
+
+
   build:
+    needs: create-release
     strategy:
       fail-fast: false
       matrix:
@@ -41,6 +61,14 @@ jobs:
       name: Install gcc/g++-multilib for linux
       run: sudo apt install gcc-multilib g++-multilib
 
+    - if: matrix.build-type == 'Debug'
+      name: Setup debug name
+      run: echo "ARTIFACT_NAME=discord-connector-${{ env.REPO_TAG }}-${{ runner.os }}"
+
+    - if: matrix.build-type == 'Debug'
+      name: Setup debug name
+      run: echo "ARTIFACT_NAME=discord-connector-${{ env.REPO_TAG }}-${{ runner.os }}-${{ matrix.build-type }}"
+
     - name: Get python
       uses: actions/setup-python@v2
       with:
@@ -60,16 +88,19 @@ jobs:
         buildDirectory: '${{ runner.workspace }}/build'
         cmakeAppendedArgs: '${{ matrix.cmake-args }} -DCMAKE_BUILD_TYPE=${{ matrix.build-type }} -DDCC_VERSION=${{ env.REPO_TAG }} -DGH_ACBUILD=TRUE'
 
-    - if: matrix.build-type == 'Release'
-      name: Upload release artifact
+    - name: Upload release artifact
       uses: actions/upload-artifact@v2
       with:
-        name: discord-connector-${{ env.REPO_TAG }}-${{ runner.os }}
+        name: ${{ env.ARTIFACT_NAME }}
         path: ${{ runner.workspace }}/build/artifact/
 
-    - if: matrix.build-type == 'Debug'
-      name: Upload debug artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: discord-connector-${{ env.REPO_TAG }}-${{ runner.os }}-${{ matrix.build-type }}
-        path: ${{ runner.workspace }}/build/artifact/
+    - name: Upload Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ jobs.create_release.outputs.upload_url }} 
+          asset_path: ./${{ env.ARTIFACT_NAME }}.zip
+          asset_name: ${{ env.ARTIFACT_NAME }}.zip
+          asset_content_type: application/zip
