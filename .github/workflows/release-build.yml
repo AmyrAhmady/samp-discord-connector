@@ -3,10 +3,7 @@ name: Build
 on:
   push:
     tags:
-      - 'master' 
-      - 'gh-actions' # temp
-  pull_request:
-
+      - 'v*.*.*' 
 
 jobs:
   build:
@@ -31,9 +28,10 @@ jobs:
       with:
         submodules: recursive
 
-    - name: Set env
-      run: echo "REPO_TAG=$(git describe --tags --always)" >> $GITHUB_ENV
+    - name: Set release env
+      run: echo "REPO_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
       shell: bash
+
     - run: echo "tag = ${{env.REPO_TAG}}"
     
     - name: get-cmake
