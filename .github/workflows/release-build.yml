@@ -62,8 +62,8 @@ jobs:
       name: Install gcc/g++-multilib for linux
       run: sudo apt install gcc-multilib g++-multilib
 
-    - if: matrix.build-type == 'Debug'
-      name: Setup debug name
+    - if: matrix.build-type == 'Release'
+      name: Setup release name
       run: echo "ARTIFACT_NAME=discord-connector-${{ env.REPO_TAG }}-${{ runner.os }}"
 
     - if: matrix.build-type == 'Debug'
