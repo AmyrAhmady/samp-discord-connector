@@ -32,7 +32,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest, ubuntu-18.04]
-        build-type: [Debug, Release]
+        build-type: [Release]
         include:
           - os: windows-latest
             cmake-args: '-AWin32 -Thost=x86'
