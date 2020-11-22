@@ -94,12 +94,9 @@ jobs:
         name: ${{ env.ARTIFACT_NAME }}
         path: ${{ runner.workspace }}/build/artifact/
 
-    - name: Install zip
-      uses: montudor/action-zip@v0.1.1
-
-    - name: Zip output
-      run: zip -qq -r ${{env.ARTIFACT_NAME}}.zip *
-      working-directory: ${{ runner.workspace }}/build/artifact/
+    - name: Zip artifact
+      run: Compress-Archive ${{ env.ARTIFACT_NAME }}/build/artifact/* ${{ env.ARTIFACT_NAME }}/build/artifact/artifact.zip
+      shell: pwsh
 
     - name: Upload Asset
       id: upload-release-asset 
