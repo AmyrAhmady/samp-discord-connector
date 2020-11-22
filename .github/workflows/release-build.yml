@@ -60,14 +60,14 @@ jobs:
         buildDirectory: '${{ runner.workspace }}/build'
         cmakeAppendedArgs: '${{ matrix.cmake-args }} -DCMAKE_BUILD_TYPE=${{ matrix.build-type }} -DDCC_VERSION=${{ env.REPO_TAG }} -DGH_ACBUILD=TRUE'
 
-    - if: ${{ matrix.build-type }} == Release
+    - if: matrix.build-type == 'Release'
       name: Upload release artifact
       uses: actions/upload-artifact@v2
       with:
         name: discord-connector-${{ env.REPO_TAG }}-${{ runner.os }}
         path: ${{ runner.workspace }}/build/artifact/
 
-    - if: ${{ matrix.build-type }} == Debug
+    - if: matrix.build-type == 'Debug'
       name: Upload debug artifact
       uses: actions/upload-artifact@v2
       with:
