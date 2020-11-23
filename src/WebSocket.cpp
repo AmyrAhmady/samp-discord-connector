@@ -392,11 +392,18 @@ void WebSocket::Write(std::string const &data)
 {
 	Logger::Get()->Log(LogLevel::DEBUG, "WebSocket::Write");
 
-	_websocket->async_write(
-		asio::buffer(data),
-		beast::bind_front_handler(
-			&WebSocket::OnWrite,
-			this));
+	if (m_Queue.empty())
+	{
+		_websocket->async_write(
+			asio::buffer(data),
+			beast::bind_front_handler(
+				&WebSocket::OnWrite,
+				this));
+	}
+	else
+	{
+		m_Queue.emplace(data);
+	}
 }
 
 void WebSocket::OnWrite(beast::error_code ec,
@@ -413,6 +420,16 @@ void WebSocket::OnWrite(beast::error_code ec,
 			ec.message(), ec.value());
 
 		// we don't handle reconnects here, as the read handler already does this
+	}
+
+	if (!m_Queue.empty())
+	{
+		_websocket->async_write(
+			asio::buffer(m_Queue.front()),
+			beast::bind_front_handler(
+				&WebSocket::OnWrite,
+				this));
+		m_Queue.pop();
 	}
 }
 

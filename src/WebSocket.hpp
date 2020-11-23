@@ -6,6 +6,7 @@
 #include <map>
 #include <thread>
 #include <memory>
+#include <queue>
 
 #include <json.hpp>
 #include <boost/asio/strand.hpp>
@@ -95,6 +96,7 @@ private: // variables
 	asio::steady_timer m_HeartbeatTimer;
 	std::chrono::steady_clock::duration m_HeartbeatInterval;
 	std::multimap<Event, EventCallback_t> m_EventMap;
+	std::queue<std::string> m_Queue;
 
 private: // functions
 	void Initialize(std::string token, std::string gateway_url);

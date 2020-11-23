@@ -180,6 +180,7 @@ if (MSVC)
 	# WORKAROUND: Boost 1.70.0+ Beast has a bug that prevents using MSVC compiler optimizations
 	# see https://github.com/boostorg/beast/issues/1582
 	target_compile_options(discord-connector PUBLIC "$<$<CONFIG:Release>:/Od>")
+	target_compile_options(discord-connector PUBLIC "/bigobj")
 endif()
 
 add_custom_command(
