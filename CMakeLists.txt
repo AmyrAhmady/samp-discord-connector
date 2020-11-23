@@ -7,6 +7,7 @@ if (NOT DCC_VERSION) # allow version override
 endif()
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/libs/cmake")
+set_property( GLOBAL PROPERTY USE_FOLDERS ON)
 
 if(MSVC)
 	SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
