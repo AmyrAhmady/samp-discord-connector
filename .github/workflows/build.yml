@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - 'master' 
-      - 'gh-actions' # temp
+      - 'github-actions' # temp
   pull_request:
     branches:
       - 'master'
