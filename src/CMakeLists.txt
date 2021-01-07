@@ -160,6 +160,12 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E copy
 		${CMAKE_BINARY_DIR}/lib/discord-connector.so
 		${CMAKE_BINARY_DIR}/artifact/plugins/discord-connector.so)
+
+add_custom_command(
+	TARGET discord-connector POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy
+		${CMAKE_BINARY_DIR}/lib/log-core2.so
+		${CMAKE_BINARY_DIR}/artifact/log-core2.so)
 endif()
 
 if(MSVC)
