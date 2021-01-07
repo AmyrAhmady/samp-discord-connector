@@ -74,16 +74,16 @@ set_property(TARGET discord-connector PROPERTY CXX_STANDARD_REQUIRED ON)
 if(MSVC)
 set_target_properties(discord-connector
     PROPERTIES
-	RUNTIME_OUTPUT_DIRECTORY $<1:${CMAKE_BINARY_DIR}/artifact>
-	LIBRARY_OUTPUT_DIRECTORY  $<1:${CMAKE_BINARY_DIR}/artifact>
+	RUNTIME_OUTPUT_DIRECTORY $<1:${CMAKE_BINARY_DIR}/artifact/plugins>
+	LIBRARY_OUTPUT_DIRECTORY  $<1:${CMAKE_BINARY_DIR}/artifact/plugins>
 )
 elseif(UNIX)
 message("binary dir:" ${CMAKE_BINARY_DIR})
 set_target_properties(discord-connector
     PROPERTIES
-	RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/artifact
-	LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/artifact
-	ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/artifact
+	RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/artifact/plugins
+	LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/artifact/plugins
+	ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/artifact/plugins
 )
 endif()
 
@@ -159,7 +159,7 @@ add_custom_command(
     TARGET discord-connector POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
 		${CMAKE_BINARY_DIR}/lib/discord-connector.so
-		${CMAKE_BINARY_DIR}/artifact/discord-connector.so)
+		${CMAKE_BINARY_DIR}/artifact/plugins/discord-connector.so)
 endif()
 
 if(MSVC)
