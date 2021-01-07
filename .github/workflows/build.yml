@@ -17,8 +17,8 @@ jobs:
         os: [windows-latest, ubuntu-18.04]
         build-type: [Debug, Release]
         include:
-          - os: windows-latest
-            cmake-args: '-AWin32 -Thost=x86'
+         # - os: windows-latest
+          #cmake-args: '-AWin32 -Thost=x86'
           - os: ubuntu-18.04
             cmake-args: '-DCMAKE_CXX_FLAGS=-m32 -DCMAKE_C_FLAGS=-m32'
 
