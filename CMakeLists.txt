@@ -8,10 +8,36 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/libs/cmake")
 
+if(MSVC)
+	set(CMAKE_BUILD_TYPE "" CACHE STRING "" FORCE)
+endif()
+
+if(UNIX)
+	set(
+		ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/artifact/"
+		LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/artifact/"
+		RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/artifact/"
+	)
+endif()
+
+# -- CONAN
+include(libs/cmake-conan/conan.cmake)
+function(add_conan_lib pkg_name conan_pkg)
+	conan_check(REQUIRED)
+
+	conan_cmake_run(
+		REQUIRES ${conan_pkg}
+		ARCH x86
+		BASIC_SETUP CMAKE_TARGETS
+		BUILD missing
+	)
+
+	set_target_properties(${pkg_name} PROPERTIES IMPORTED_GLOBAL TRUE)
+endfunction()
+
 if (MSVC)
-	add_link_options(/INCREMENTAL:NO /NODEFAULTLIB:MSVCRT)
 	# link runtime statically
-	set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+	set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 elseif(UNIX)
 	# hide non-exported symbols
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
@@ -30,28 +56,21 @@ if(NOT DEFINED OPENSSL_USE_STATIC_LIBS)
 	set(OPENSSL_USE_STATIC_LIBS ON)
 	set(OPENSSL_MSVC_STATIC_RT ON)
 endif()
-find_package(OpenSSL)
-if (NOT OPENSSL_FOUND)
-	set(OPENSSL_ROOT_DIR "${OPENSSL_ROOT_DIR}" CACHE PATH "Set the OpenSSL root folder.")
-	mark_as_advanced(CLEAR OPENSSL_ROOT_DIR)
-	message(FATAL_ERROR "Could NOT find OpenSSL; specify additional paths.")
-endif()
 
+add_conan_lib(CONAN_PKG::openssl openssl/1.1.1h)
 
-find_package(Boost 1.69 QUIET)
-if(NOT Boost_FOUND)
-	set(BOOST_ROOT "${BOOST_ROOT}" CACHE PATH "Set the Boost root folder.")
-	mark_as_advanced(CLEAR BOOST_ROOT)
-	message(FATAL_ERROR "Could NOT find Boost; specify additional paths.")
-endif()
-mark_as_advanced(BOOST_ROOT Boost_DIR)
+conan_check(REQUIRED)
+conan_cmake_run(
+	REQUIRES boost/1.73.0
+	ARCH x86
+	BASIC_SETUP CMAKE_TARGETS
+	BUILD missing
+	OPTIONS boost:zlib=False
+)
+set_target_properties(CONAN_PKG::boost PROPERTIES IMPORTED_GLOBAL TRUE)
+set(CONAN_HAS_FMT TRUE CACHE INTERNAL FALSE)
 
+add_conan_lib(CONAN_PKG::fmt fmt/7.1.3)
 
-add_subdirectory(libs/fmt)
-mark_as_advanced(FMT_TEST FMT_INSTALL FMT_PEDANTIC FMT_DOC FMT_USE_CPP11 FMT_WERROR)
-
-
-find_package(log-core REQUIRED CONFIG)
-
-
+add_subdirectory(libs/log-core)
 add_subdirectory(src)
