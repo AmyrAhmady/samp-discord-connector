@@ -19,8 +19,8 @@ jobs:
         include:
           - os: windows-latest
             cmake-args: '-AWin32 -Thost=x86'
-          - os: ubuntu-18.04
-            cmake-args: '-DCMAKE_CXX_FLAGS=-m32 -DCMAKE_C_FLAGS=-m32'
+          #- os: ubuntu-18.04
+            #cmake-args: '-DCMAKE_CXX_FLAGS=-m32 -DCMAKE_C_FLAGS=-m32'
 
     runs-on: ${{ matrix.os }}
     env:
@@ -69,7 +69,7 @@ jobs:
         cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
         cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
         buildDirectory: '${{ runner.workspace }}/build'
-        cmakeAppendedArgs: '${{ matrix.cmake-args }} -DCMAKE_BUILD_TYPE=${{ matrix.build-type }} -DDCC_VERSION=${{ env.REPO_TAG }} -DGH_ACBUILD=TRUE'
+        cmakeAppendedArgs: '${{ matrix.cmake-args }} -DCMAKE_BUILD_TYPE=${{ matrix.build-type }} -DDCC_VERSION=${{ env.REPO_TAG }} -DGH_ACBUILD=TRUE -DBOOST_ROOT=${{ env.BOOST_ROOT }}'
 
     - name: Upload artifact
       uses: actions/upload-artifact@v2

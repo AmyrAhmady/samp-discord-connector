@@ -111,12 +111,13 @@ endif()
 target_compile_definitions(discord-connector PRIVATE ONLY_C_LOCALE) # make the date library use the C locale only
 
 if(GH_ACBUILD)
-	# We use the default boost the action comes with so we don't bother with conan here.
-	target_link_directories(discord-connector PRIVATE ${Boost_INCLUDE_DIR})
+	# We use the default boost & openssl the action comes with so we don't bother with conan here.
+	target_link_directories(discord-connector PRIVATE ${Boost_INCLUDE_DIR} ${OPENSSL_INCLUDE_DIR})
+	target_link_libraries(discord-connector OpenSSL::SSL)
 else()
-	target_link_libraries(discord-connector CONAN_PKG::boost)
+	target_link_libraries(discord-connector CONAN_PKG::boost CONAN_PKG::openssl)
 endif()
-target_link_libraries(discord-connector log-core CONAN_PKG::fmt  CONAN_PKG::openssl)
+target_link_libraries(discord-connector log-core CONAN_PKG::fmt)
 
 if(UNIX)
 	if(NOT APPLE)
