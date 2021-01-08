@@ -112,7 +112,7 @@ target_compile_definitions(discord-connector PRIVATE ONLY_C_LOCALE) # make the d
 
 if(GH_ACBUILD)
 	# We use the default boost & openssl the action comes with so we don't bother with conan here.
-	target_link_directories(discord-connector PRIVATE ${Boost_INCLUDE_DIR} ${OPENSSL_INCLUDE_DIR})
+	target_include_directories(discord-connector PRIVATE ${Boost_INCLUDE_DIR} ${OPENSSL_INCLUDE_DIR})
 	target_link_libraries(discord-connector OpenSSL::SSL)
 else()
 	target_link_libraries(discord-connector CONAN_PKG::boost CONAN_PKG::openssl)
