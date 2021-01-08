@@ -45,10 +45,9 @@ jobs:
         sudo apt-get update
         sudo apt install gcc-multilib g++-multilib
 
-    - if: runner.os == 'Windows'
-      name: Set boost_root to BOOST_ROOT_1_72_0
+    - name: Set boost_root to BOOST_ROOT_1_72_0
       run: |
-        $env:BOOST_ROOT=$env:BOOST_ROOT_1_72_0
+        echo "::set-env name=BOOST_ROOT::$BOOST_ROOT_1_72_0"
 
     - name: Get python
       uses: actions/setup-python@v2
