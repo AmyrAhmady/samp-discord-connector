@@ -46,9 +46,9 @@ jobs:
         sudo apt install gcc-multilib g++-multilib
 
     - name: Set boost_root to BOOST_ROOT_1_72_0
-      run: |
-        echo "::set-env name=BOOST_ROOT::$BOOST_ROOT_1_72_0"
-
+      run: echo "BOOST_ROOT=$BOOST_ROOT_1_72_0" >> $GITHUB_ENV
+      shell: bash
+      
     - name: Get python
       uses: actions/setup-python@v2
       with:
