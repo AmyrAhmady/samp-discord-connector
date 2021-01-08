@@ -14,11 +14,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-18.04]
-        build-type: [Debug, Release]
+        os: [windows-latest] #ubuntu-18.04]
+        build-type: [Release] # Debug
         include:
-         # - os: windows-latest
-          #cmake-args: '-AWin32 -Thost=x86'
+          - os: windows-latest
+            cmake-args: '-AWin32 -Thost=x86'
           - os: ubuntu-18.04
             cmake-args: '-DCMAKE_CXX_FLAGS=-m32 -DCMAKE_C_FLAGS=-m32'
 
@@ -45,6 +45,12 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt install gcc-multilib g++-multilib
+
+    - if: runner.os == 'Windows'
+      name: Set boost_root to BOOST_ROOT_1_72_0
+      run: |
+        $env:BOOST_ROOT=$env:BOOST_ROOT_1_72_0
+      shell: pwsh
 
     - name: Get python
       uses: actions/setup-python@v2
