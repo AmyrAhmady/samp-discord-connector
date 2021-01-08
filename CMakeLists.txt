@@ -7,6 +7,7 @@ if (NOT DCC_VERSION) # allow version override
 endif()
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/libs/cmake")
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 if(MSVC)
 	set(CMAKE_BUILD_TYPE "" CACHE STRING "" FORCE)
@@ -50,6 +51,7 @@ elseif(UNIX)
 		"-static-libgcc"
 		"-static-libstdc++"
 	)
+	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath='$ORIGIN'")
 endif()
 
 if(NOT DEFINED OPENSSL_USE_STATIC_LIBS)
