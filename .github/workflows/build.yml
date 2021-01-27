@@ -19,8 +19,8 @@ jobs:
         include:
           - os: windows-latest
             cmake-args: '-AWin32 -Thost=x86'
-          #- os: ubuntu-18.04
-            #cmake-args: '-DCMAKE_CXX_FLAGS=-m32 -DCMAKE_C_FLAGS=-m32'
+          - os: ubuntu-18.04
+            cmake-args: '-DCMAKE_CXX_FLAGS=-m32 -DCMAKE_C_FLAGS=-m32'
 
     runs-on: ${{ matrix.os }}
     env:
@@ -44,8 +44,10 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt install gcc-multilib g++-multilib
+        sudo apt install libboost-all-dev
 
-    - name: Set boost_root to BOOST_ROOT_1_72_0
+    - if: runner.os == 'Windows'
+      name: Set boost_root to BOOST_ROOT_1_72_0
       run: echo "BOOST_ROOT=$BOOST_ROOT_1_72_0" >> $GITHUB_ENV
       shell: bash
       
