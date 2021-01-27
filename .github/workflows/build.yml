@@ -18,7 +18,7 @@ jobs:
         build-type: [Debug]
         include:
           - os: windows-latest
-            cmake-args: '-AWin32 -Thost=x86'
+            cmake-args: '-AWin32 -Thost=x86 -DGH_ACBUILD=TRUE'
           - os: ubuntu-18.04
             cmake-args: '-DCMAKE_CXX_FLAGS=-m32 -DCMAKE_C_FLAGS=-m32'
 
@@ -44,7 +44,6 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt install gcc-multilib g++-multilib
-        sudo apt install libboost-all-dev
 
     - if: runner.os == 'Windows'
       name: Set boost_root to BOOST_ROOT_1_72_0
@@ -68,7 +67,7 @@ jobs:
         cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
         cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
         buildDirectory: '${{ runner.workspace }}/build'
-        cmakeAppendedArgs: '${{ matrix.cmake-args }} -DCMAKE_BUILD_TYPE=${{ matrix.build-type }} -DDCC_VERSION=${{ env.REPO_TAG }} -DGH_ACBUILD=TRUE -DBOOST_ROOT=${{ env.BOOST_ROOT }}'
+        cmakeAppendedArgs: '${{ matrix.cmake-args }} -DCMAKE_BUILD_TYPE=${{ matrix.build-type }} -DDCC_VERSION=${{ env.REPO_TAG }} -DBOOST_ROOT=${{ env.BOOST_ROOT }}'
 
     - name: Upload artifact
       uses: actions/upload-artifact@v2
