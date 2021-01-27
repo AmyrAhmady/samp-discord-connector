@@ -60,13 +60,6 @@ if(NOT DEFINED OPENSSL_USE_STATIC_LIBS)
 endif()
 
 if(GH_ACBUILD)
-	find_package(OpenSSL)
-	if (NOT OPENSSL_FOUND)
-		set(OPENSSL_ROOT_DIR "${OPENSSL_ROOT_DIR}" CACHE PATH "Set the OpenSSL root folder.")
-		mark_as_advanced(CLEAR OPENSSL_ROOT_DIR)
-		message(FATAL_ERROR "Could NOT find OpenSSL; specify additional paths.")
-	endif()
-
 	find_package(Boost QUIET)
 	if(NOT Boost_FOUND)
 		set(BOOST_ROOT "${BOOST_ROOT}" CACHE PATH "Set the Boost root folder.")
@@ -74,7 +67,6 @@ if(GH_ACBUILD)
 		message(FATAL_ERROR "Could NOT find Boost; specify additional paths.")
 	endif()
 else()
-add_conan_lib(CONAN_PKG::openssl openssl/1.1.1h)
 conan_check(REQUIRED)
 conan_cmake_run(
 	REQUIRES boost/1.73.0
@@ -88,6 +80,7 @@ endif()
 
 set(CONAN_HAS_FMT TRUE CACHE INTERNAL FALSE)
 add_conan_lib(CONAN_PKG::fmt fmt/7.1.3)
+add_conan_lib(CONAN_PKG::openssl openssl/1.1.1h)
 
 add_subdirectory(libs/log-core)
 add_subdirectory(src)
