@@ -14,8 +14,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest] #ubuntu-18.04]
-        build-type: [Release] # Debug
+        os: [windows-latest, ubuntu-18.04]
+        build-type: [Debug]
         include:
           - os: windows-latest
             cmake-args: '-AWin32 -Thost=x86'
