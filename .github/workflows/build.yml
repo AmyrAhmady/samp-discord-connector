@@ -48,7 +48,7 @@ jobs:
         sudo add-apt-repository ppa:mhier/libboost-latest
         sudo apt-get update
         
-        sudo apt-get install libboost-all-dev
+        sudo apt-get install libboost1.75-all-dev
 
     - if: runner.os == 'Windows'
       name: Set boost_root to BOOST_ROOT_1_72_0
