@@ -20,7 +20,7 @@ jobs:
           - os: windows-latest
             cmake-args: '-AWin32 -Thost=x86 -DGH_ACBUILD=TRUE'
           - os: ubuntu-18.04
-            cmake-args: '-DCMAKE_CXX_FLAGS=-m32 -DCMAKE_C_FLAGS=-m32'
+            cmake-args: '-DCMAKE_CXX_FLAGS=-m32 -DCMAKE_C_FLAGS=-m32 -DGH_ACBUILD=TRUE'
 
     runs-on: ${{ matrix.os }}
     env:
@@ -40,10 +40,15 @@ jobs:
       uses: lukka/get-cmake@v3.19.0
 
     - if: runner.os == 'Linux'
-      name: Install gcc/g++-multilib for linux
+      name: Install gcc/g++-multilib & boost for linux
       run: |
         sudo apt-get update
         sudo apt install gcc-multilib g++-multilib
+        
+        sudo add-apt-repository ppa:mhier/libboost-latest
+        sudo apt-get update
+        
+        sudo apt-get install libboost-all-dev
 
     - if: runner.os == 'Windows'
       name: Set boost_root to BOOST_ROOT_1_72_0
