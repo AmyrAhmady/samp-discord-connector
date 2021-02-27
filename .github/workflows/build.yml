@@ -14,12 +14,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, ubuntu-latest]
+        os: [windows-latest, ubuntu-20.04]
         build-type: [Debug]
         include:
           - os: windows-latest
             cmake-args: '-AWin32 -Thost=x86 -DGH_ACBUILD=TRUE'
-          - os:ubuntu-latest
+          - os: ubuntu-20.04
             cmake-args: '-DCMAKE_CXX_FLAGS=-m32 -DCMAKE_C_FLAGS=-m32 -DGH_ACBUILD=TRUE'
 
     runs-on: ${{ matrix.os }}
