@@ -61,10 +61,14 @@ jobs:
     - name: get-cmake
       uses: lukka/get-cmake@v3.19.0
 
-    - name: Set artifact name
-      run: echo "ARTIFACT_NAME=discord-connector-${{ env.REPO_TAG }}-${{ runner.os }}" >> $GITHUB_ENV
+    - name: Set artifact name (windows)
+      run: echo "ARTIFACT_NAME=discord-connector-${{ env.REPO_TAG }}-win32" >> $GITHUB_ENV
       shell: bash
     
+    - name: Set artifact name (linux)
+      run: echo "ARTIFACT_NAME=discord-connector-${{ env.REPO_TAG }}-${{ runner.os }}" >> $GITHUB_ENV
+      shell: bash
+
     - if: runner.os == 'Windows'
       name: Install boost
       run: |
@@ -161,7 +165,11 @@ jobs:
     - name: get-cmake
       uses: lukka/get-cmake@v3.19.0
 
-    - name: Set artifact name
+    - name: Set artifact name (windows)
+      run: echo "ARTIFACT_NAME=discord-connector-${{ env.REPO_TAG }}-win32-Debug" >> $GITHUB_ENV
+      shell: bash
+    
+    - name: Set artifact name (linux)
       run: echo "ARTIFACT_NAME=discord-connector-${{ env.REPO_TAG }}-${{ runner.os }}-Debug" >> $GITHUB_ENV
       shell: bash
     
@@ -216,13 +224,17 @@ jobs:
         name: ${{ env.ARTIFACT_NAME }}
         path: ${{ runner.workspace }}/build/artifact/
 
+    - name: Zip artifact
+      run: Compress-Archive ${{ runner.workspace }}/build/artifact/* ${{ runner.workspace }}/build/artifact/${{ env.ARTIFACT_NAME }}.zip
+      shell: pwsh
+
     - name: Upload Asset
       id: upload-release-asset 
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ needs.create-release.outputs.upload_url }} 
-        asset_path: ./${{ env.ARTIFACT_NAME }}.zip
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
+        asset_path: ${{ runner.workspace }}/build/artifact/${{ env.ARTIFACT_NAME }}.zip
         asset_name: ${{ env.ARTIFACT_NAME }}.zip
         asset_content_type: application/zip
