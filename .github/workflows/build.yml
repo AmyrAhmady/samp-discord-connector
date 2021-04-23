@@ -38,13 +38,27 @@ jobs:
     
     - name: get-cmake
       uses: lukka/get-cmake@v3.19.0
+      
+    - if: runner.os == 'Windows'
+      name: Cache Boost
+      id: cache-boost
+      uses: actions/cache@v2.1.3
+      with:
+        path: "C:\\hostedtoolcache\\windows\\Boost"
+        key: "dcc-boost"
 
     - if: runner.os == 'Windows'
-      name: Set boost_root to BOOST_ROOT_1_72_0
-      run: echo "BOOST_ROOT=$BOOST_ROOT_1_72_0" >> $GITHUB_ENV
-      shell: bash
+      name: Install boost
+      if: steps.cache-boost.outputs.cache-hit != 'true'
+      run: |
+          $Url = "https://sourceforge.net/projects/boost/files/boost-binaries/1.73.0/boost_1_73_0-msvc-14.2-64.exe"
+          (New-Object System.Net.WebClient).DownloadFile($Url, "$env:TEMP\boost.exe")
+          Start-Process -Wait -FilePath "$env:TEMP\boost.exe" "/SILENT","/SP-","/SUPPRESSMSGBOXES","/DIR=C:\\hostedtoolcache\\windows\\Boost"
 
-    - run: echo "${BOOST_ROOT_1_72_0}"
+    - if: runner.os == 'Windows'
+        name: Set boost env
+        run: echo "BOOST_ROOT=C:\\hostedtoolcache\windows\\Boost" >> $GITHUB_ENV
+        shell: bash
 
     - if: runner.os == 'Linux'
       name: Install gcc/g++-multilib
