@@ -72,11 +72,16 @@ set_property(TARGET discord-connector PROPERTY CXX_STANDARD 14)
 set_property(TARGET discord-connector PROPERTY CXX_STANDARD_REQUIRED ON)
 
 if(MSVC)
-set_target_properties(discord-connector
-    PROPERTIES
-	RUNTIME_OUTPUT_DIRECTORY $<1:${CMAKE_BINARY_DIR}/artifact/plugins>
-	LIBRARY_OUTPUT_DIRECTORY  $<1:${CMAKE_BINARY_DIR}/artifact/plugins>
-)
+	set_target_properties(discord-connector
+		PROPERTIES
+		RUNTIME_OUTPUT_DIRECTORY $<1:${CMAKE_BINARY_DIR}/artifact/plugins>
+		LIBRARY_OUTPUT_DIRECTORY  $<1:${CMAKE_BINARY_DIR}/artifact/plugins>
+	)
+	if(CMAKE_BUILD_TYPE NOT MATCHES DEBUG)
+		set_target_properties(discord-connector PROOPERTIES
+			COMPILE_PDB_OUTPUT_DIRECTORY $<1:${CMAKE_BINARY_DIR}>
+		)
+	endif()
 elseif(UNIX)
 message("binary dir:" ${CMAKE_BINARY_DIR})
 set_target_properties(discord-connector
