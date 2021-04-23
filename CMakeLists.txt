@@ -59,15 +59,26 @@ if(NOT DEFINED OPENSSL_USE_STATIC_LIBS)
 	set(OPENSSL_MSVC_STATIC_RT ON)
 endif()
 
-conan_check(REQUIRED)
-conan_cmake_run(
-	REQUIRES boost/1.73.0
-	ARCH x86
-	BASIC_SETUP CMAKE_TARGETS
-	BUILD missing
-	OPTIONS boost:zlib=False
-)
-set_target_properties(CONAN_PKG::boost PROPERTIES IMPORTED_GLOBAL TRUE)
+if(USING_BOOST_NO_CONAN)
+	set(Boost_USE_STATIC_LIBS ON)
+	set(Boost_USE_DEBUG_LIBS ON)
+	set(Boost_USE_RELEASE_LIBS ON)
+	set(Boost_USE_MULTITHREADED ON)
+	set(Boost_USE_STATIC_RUNTIME OFF)
+	find_package(Boost 1.72.0)
+
+	set(Boost_INCLUDE_DIR "${Boost_INCLUDE_DIR}" PARENT_SCOPE)
+else()
+	conan_check(REQUIRED)
+	conan_cmake_run(
+		REQUIRES boost/1.73.0
+		ARCH x86
+		BASIC_SETUP CMAKE_TARGETS
+		BUILD missing
+		OPTIONS boost:zlib=False
+	)
+	set_target_properties(CONAN_PKG::boost PROPERTIES IMPORTED_GLOBAL TRUE)
+endif()
 
 set(CONAN_HAS_FMT TRUE CACHE INTERNAL FALSE)
 add_conan_lib(CONAN_PKG::fmt fmt/7.1.3)
