@@ -63,6 +63,7 @@ jobs:
 
     - name: Set artifact name
       run: echo "ARTIFACT_NAME=discord-connector-${{ env.REPO_TAG }}-${{ runner.os }}" >> $GITHUB_ENV
+      shell: bash
     
     - if: runner.os == 'Windows'
       name: Install boost
@@ -162,6 +163,7 @@ jobs:
 
     - name: Set artifact name
       run: echo "ARTIFACT_NAME=discord-connector-${{ env.REPO_TAG }}-${{ runner.os }}-Debug" >> $GITHUB_ENV
+      shell: bash
     
     - if: runner.os == 'Windows'
       name: Install boost
