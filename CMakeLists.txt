@@ -59,14 +59,6 @@ if(NOT DEFINED OPENSSL_USE_STATIC_LIBS)
 	set(OPENSSL_MSVC_STATIC_RT ON)
 endif()
 
-if(GH_ACBUILD)
-	find_package(Boost QUIET)
-	if(NOT Boost_FOUND)
-		set(BOOST_ROOT "${BOOST_ROOT}" CACHE PATH "Set the Boost root folder.")
-		mark_as_advanced(CLEAR BOOST_ROOT)
-		message(FATAL_ERROR "Could NOT find Boost; specify additional paths.")
-	endif()
-else()
 conan_check(REQUIRED)
 conan_cmake_run(
 	REQUIRES boost/1.73.0
@@ -76,7 +68,6 @@ conan_cmake_run(
 	OPTIONS boost:zlib=False
 )
 set_target_properties(CONAN_PKG::boost PROPERTIES IMPORTED_GLOBAL TRUE)
-endif()
 
 set(CONAN_HAS_FMT TRUE CACHE INTERNAL FALSE)
 add_conan_lib(CONAN_PKG::fmt fmt/7.1.3)
