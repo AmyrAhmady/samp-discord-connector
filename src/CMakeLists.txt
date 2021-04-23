@@ -115,7 +115,15 @@ if(USING_BOOST_NO_CONAN)
 else()
 	target_link_libraries(discord-connector CONAN_PKG::boost)
 endif()
-target_link_libraries(discord-connector log-core  CONAN_PKG::fmt CONAN_PKG::openssl)
+
+if(USING_OPENSSL_NO_CONAN)
+	target_include_directories(discord-connector PUBLIC ${OPENSSL_INCLUDE_DIR})
+	target_link_libraries(discord-connector log-core fmt OpenSSL::SSL)
+else()
+	target_link_libraries(discord-connector CONAN_PKG::openssl)
+endif()
+
+target_link_libraries(discord-connector log-core  CONAN_PKG::fmt)
 
 if(UNIX)
 	if(NOT APPLE)
