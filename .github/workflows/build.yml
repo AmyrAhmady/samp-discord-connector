@@ -56,7 +56,7 @@ jobs:
       name: Install openssl
       run: choco install openssl --forcex86 | out-null
       
-    - if: runner.os = 'Windows'
+    - if: runner.os == 'Windows'
       name: Setup openssl envvar
       run: | 
         echo "OPENSSL_ROOT=C:\\Program Files (x86)\\OpenSSL-Win32" >> $GITHUB_ENV
