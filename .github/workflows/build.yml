@@ -44,8 +44,8 @@ jobs:
       run: echo "BOOST_ROOT=$BOOST_ROOT_1_72_0" >> $GITHUB_ENV
       shell: bash
 
-    - run: echo "${BOOST_ROOT}"
-    
+    - run: echo "${BOOST_ROOT_1_72_0}"
+
     - if: runner.os == 'Linux'
       name: Install gcc/g++-multilib
       run: |
