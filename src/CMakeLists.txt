@@ -82,6 +82,16 @@ if(MSVC)
 			COMPILE_PDB_OUTPUT_DIRECTORY $<1:${CMAKE_BINARY_DIR}>
 		)
 	endif()
+
+	if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+		set_target_properties(discord-connector PROOPERTIES
+			COMPILE_PDB_OUTPUT_DIRECTORY $<1:${CMAKE_BINARY_DIR}/artifact/plugins>
+		)
+	else()
+		set_target_properties(discord-connector PROOPERTIES
+			COMPILE_PDB_OUTPUT_DIRECTORY $<1:${CMAKE_BINARY_DIR}>
+		)
+	endif()
 elseif(UNIX)
 message("binary dir:" ${CMAKE_BINARY_DIR})
 set_target_properties(discord-connector
