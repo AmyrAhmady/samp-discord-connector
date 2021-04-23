@@ -79,11 +79,11 @@ if(MSVC)
 	)
 
 	if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-		set_target_properties(discord-connector PROOPERTIES
+		set_target_properties(discord-connector PROPERTIES
 			COMPILE_PDB_OUTPUT_DIRECTORY $<1:${CMAKE_BINARY_DIR}/artifact/plugins>
 		)
 	else()
-		set_target_properties(discord-connector PROOPERTIES
+		set_target_properties(discord-connector PROPERTIES
 			COMPILE_PDB_OUTPUT_DIRECTORY $<1:${CMAKE_BINARY_DIR}>
 		)
 	endif()
