@@ -38,18 +38,9 @@ jobs:
     
     - name: get-cmake
       uses: lukka/get-cmake@v3.19.0
-      
-    - if: runner.os == 'Windows'
-      name: Cache Boost
-      id: cache-boost
-      uses: actions/cache@v2.1.3
-      with:
-        path: "C:\\hostedtoolcache\\windows\\Boost"
-        key: "dcc-boost"
 
     - if: runner.os == 'Windows'
       name: Install boost
-      if: steps.cache-boost.outputs.cache-hit != 'true'
       run: |
           $Url = "https://sourceforge.net/projects/boost/files/boost-binaries/1.73.0/boost_1_73_0-msvc-14.2-64.exe"
           (New-Object System.Net.WebClient).DownloadFile($Url, "$env:TEMP\boost.exe")
