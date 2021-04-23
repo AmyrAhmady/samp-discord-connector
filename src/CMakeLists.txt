@@ -118,7 +118,7 @@ endif()
 
 if(USING_OPENSSL_NO_CONAN)
 	target_include_directories(discord-connector PUBLIC ${OPENSSL_INCLUDE_DIR})
-	target_link_libraries(discord-connector log-core fmt OpenSSL::SSL)
+	target_link_libraries(discord-connector OpenSSL::SSL)
 else()
 	target_link_libraries(discord-connector CONAN_PKG::openssl)
 endif()
