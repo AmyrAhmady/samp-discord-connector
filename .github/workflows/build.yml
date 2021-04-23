@@ -18,7 +18,7 @@ jobs:
         build-type: [Debug]
         include:
           - os: windows-latest
-            cmake-args: '-AWin32 -Thost=x86 -DGH_ACBUILD=TRUE  -DUSING_BOOST_NO_CONAN=TRUE -DBoost_NO_BOOST_CMAKE=ON'
+            cmake-args: '-AWin32 -Thost=x86 -DGH_ACBUILD=TRUE  -DUSING_BOOST_NO_CONAN=TRUE -DUSING_OPENSSL_NO_CONAN=TRUE -DBoost_NO_BOOST_CMAKE=ON'
           - os: ubuntu-20.04
             cmake-args: '-DCMAKE_CXX_FLAGS=-m32 -DCMAKE_C_FLAGS=-m32 -DGH_ACBUILD=TRUE'
 
@@ -51,6 +51,15 @@ jobs:
       run: echo "BOOST_ROOT=C:\\hostedtoolcache\windows\\Boost" >> $GITHUB_ENV
       shell: bash
 
+    - if: runner.os == 'Windows'
+      name: Install openssl
+      run: choco install openssl --forcex86 | out-null
+      
+    - if: runner.os = 'Windows'
+      name: Setup openssl envvar
+      run: | 
+        echo "OPENSSL_ROOT=C:\\Program Files (x86)\\OpenSSL-Win32" >> $GITHUB_ENV
+      
     - if: runner.os == 'Linux'
       name: Install gcc/g++-multilib
       run: |
@@ -74,7 +83,7 @@ jobs:
         cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
         cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
         buildDirectory: '${{ runner.workspace }}/build'
-        cmakeAppendedArgs: '${{ matrix.cmake-args }} -DCMAKE_BUILD_TYPE=${{ matrix.build-type }} -DDCC_VERSION=${{ env.REPO_TAG }} -DBOOST_ROOT=${{ env.BOOST_ROOT }}'
+        cmakeAppendedArgs: '${{ matrix.cmake-args }} -DCMAKE_BUILD_TYPE=${{ matrix.build-type }} -DDCC_VERSION=${{ env.REPO_TAG }} -DBOOST_ROOT=${{ env.BOOST_ROOT }} -DOPENSSL_ROOT=${{ env.OPENSSL_ROOT }}'
 
     - name: Upload artifact
       uses: actions/upload-artifact@v2
