@@ -123,7 +123,7 @@ else()
 	target_link_libraries(discord-connector CONAN_PKG::openssl)
 endif()
 
-target_link_libraries(discord-connector log-core  CONAN_PKG::fmt)
+target_link_libraries(discord-connector log-core CONAN_PKG::fmt)
 
 if(UNIX)
 	if(NOT APPLE)
