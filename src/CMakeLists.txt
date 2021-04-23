@@ -77,11 +77,6 @@ if(MSVC)
 		RUNTIME_OUTPUT_DIRECTORY $<1:${CMAKE_BINARY_DIR}/artifact/plugins>
 		LIBRARY_OUTPUT_DIRECTORY  $<1:${CMAKE_BINARY_DIR}/artifact/plugins>
 	)
-	if(CMAKE_BUILD_TYPE NOT MATCHES DEBUG)
-		set_target_properties(discord-connector PROOPERTIES
-			COMPILE_PDB_OUTPUT_DIRECTORY $<1:${CMAKE_BINARY_DIR}>
-		)
-	endif()
 
 	if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 		set_target_properties(discord-connector PROOPERTIES
